@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zameen Pro Calculator</title>
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2654/2654518.png">
+    <style>
+        :root { --primary: #1a4d2e; --secondary: #4caf50; --accent: #ffeb3b; }
+        body { font-family: sans-serif; background: #f0f4f0; margin: 0; padding: 15px; }
+        .container { max-width: 500px; margin: auto; background: white; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); overflow: hidden; }
+        .header { background: var(--primary); color: white; padding: 20px; text-align: center; display: flex; justify-content: space-between; align-items: center; }
+        .lang-btn { background: white; color: var(--primary); border: none; padding: 5px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+        .section { padding: 20px; border-bottom: 1px solid #eee; }
+        h3 { color: var(--primary); margin: 0 0 15px 0; font-size: 17px; border-left: 4px solid var(--secondary); padding-left: 10px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        label { display: block; font-size: 12px; color: #666; margin-bottom: 4px; }
+        input { width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; box-sizing: border-box; font-size: 16px; outline: none; }
+        input:focus { border-color: var(--secondary); }
+        .direct-sqft { background: #fffde7; border: 2px dashed #fbc02d; }
+        .result-card { background: var(--primary); color: white; padding: 25px; }
+        .res-main { font-size: 24px; color: var(--accent); font-weight: bold; margin-bottom: 15px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        .res-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 18px; border-bottom: 1px outline rgba(255,255,255,0.05); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h2 id="headTitle" style="margin:0; font-size: 20px;">Zameen Calculator</h2>
+        <button class="lang-btn" onclick="toggleLang()" id="btnLang">Hindi</button>
+    </div>
+
+    <div class="section">
+        <h3 id="hSides">1. Charo Side se (Feet)</h3>
+        <div class="grid">
+            <div><label id="l1">Side 1 (Length)</label><input type="number" id="s1" placeholder="0" oninput="calcSides()"></div>
+            <div><label id="l2">Side 2 (Length)</label><input type="number" id="s2" placeholder="0" oninput="calcSides()"></div>
+            <div><label id="l3">Side 3 (Width)</label><input type="number" id="s3" placeholder="0" oninput="calcSides()"></div>
+            <div><label id="l4">Side 4 (Width)</label><input type="number" id="s4" placeholder="0" oninput="calcSides()"></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3 id="hDirect">2. Direct Square Feet Daalein</h3>
+        <input type="number" id="directSqft" class="direct-sqft" placeholder="Sq. Feet Likhein..." oninput="calcDirect()">
+    </div>
+
+    <div class="result-card">
+        <div class="res-main"><span id="resSqft">0.00</span> Sq.Ft</div>
+        <div class="res-row"><span id="rAcre">Acre</span>: <span id="outA">0</span></div>
+        <div class="res-row"><span id="rBigha">Bigha</span>: <span id="outB">0</span></div>
+        <div class="res-row"><span id="rBiswa">Biswa</span>: <span id="outBi">0</span></div>
+        <div class="res-row"><span id="rBiswansi">Biswansi</span>: <span id="outBn">0</span></div>
+    </div>
+</div>
+
+<script>
+    let currentLang = 'en';
+    const AC = 43560, BG = AC/6.4, BS = BG/20, BN = BS/20;
+
+    const texts = {
+        en: { head: "Zameen Calculator", sides: "1. From 4 Sides (Feet)", direct: "2. Enter Direct Sq. Feet", lS1: "Side 1 (Length)", lS2: "Side 2 (Length)", lS3: "Side 3 (Width)", lS4: "Side 4 (Width)", btn: "Hindi", uA: "Acre", uBg: "Bigha", uBs: "Biswa", uBn: "Biswansi" },
+        hi: { head: "ज़मीन कैलकुलेटर", sides: "1. चारों भुजाओं से (फुट)", direct: "2. सीधा स्क्वायर फुट डालें", lS1: "भुजा 1 (लंबाई)", lS2: "भुजा 2 (लंबाई)", lS3: "भुजा 3 (चौड़ाई)", lS4: "भुजा 4 (चौड़ाई)", btn: "English", uA: "एकड़", uBg: "बीघा", uBs: "बिस्वा", uBn: "बिस्वांसी" }
+    };
+
+    function toggleLang() {
+        currentLang = currentLang === 'en' ? 'hi' : 'en';
+        const t = texts[currentLang];
+        document.getElementById('headTitle').innerText = t.head;
+        document.getElementById('hSides').innerText = t.sides;
+        document.getElementById('hDirect').innerText = t.direct;
+        document.getElementById('l1').innerText = t.lS1; document.getElementById('l2').innerText = t.lS2;
+        document.getElementById('l3').innerText = t.lS3; document.getElementById('l4').innerText = t.lS4;
+        document.getElementById('btnLang').innerText = t.btn;
+        document.getElementById('rAcre').innerText = t.uA; document.getElementById('rBigha').innerText = t.uBg;
+        document.getElementById('rBiswa').innerText = t.uBs; document.getElementById('rBiswansi').innerText = t.uBn;
+    }
+
+    function updateUI(totalSqft) {
+        document.getElementById('resSqft').innerText = totalSqft.toLocaleString('en-IN', {minimumFractionDigits: 2});
+        
+        let rem = totalSqft;
+        let acre = Math.floor(rem / AC); rem %= AC;
+        let bigha = Math.floor(rem / BG); rem %= BG;
+        let biswa = Math.floor(rem / BS); rem %= BS;
+        let biswansi = (rem / BN).toFixed(1);
+
+        document.getElementById('outA').innerText = acre;
+        document.getElementById('outB').innerText = bigha;
+        document.getElementById('outBi').innerText = biswa;
+        document.getElementById('outBn').innerText = biswansi;
+    }
+
+    function calcSides() {
+        let s1 = parseFloat(document.getElementById('s1').value) || 0;
+        let s2 = parseFloat(document.getElementById('s2').value) || 0;
+        let s3 = parseFloat(document.getElementById('s3').value) || 0;
+        let s4 = parseFloat(document.getElementById('s4').value) || 0;
+        document.getElementById('directSqft').value = "";
+        let area = ((s1 + s2) / 2) * ((s3 + s4) / 2); // Correct Logic
+        updateUI(area);
+    }
+
+    function calcDirect() {
+        let val = parseFloat(document.getElementById('directSqft').value) || 0;
+        document.getElementById('s1').value = ""; document.getElementById('s2').value = "";
+        document.getElementById('s3').value = ""; document.getElementById('s4').value = "";
+        updateUI(val);
+    }
+</script>
+</body>
+</html>
+    
+  </body>
+  
+</html>
